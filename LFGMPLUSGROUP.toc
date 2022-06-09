@@ -1,6 +1,6 @@
-## Interface: 90200
+## Interface: 90205
 ## Title: Mythic Plus Group
 ## Author: Jason Burch
-## Version: 0.3
+## Version: 0.4
 embeds.xml
 LFGMPLUSGROUP.lua
