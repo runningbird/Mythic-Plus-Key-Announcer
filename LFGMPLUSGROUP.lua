@@ -1,5 +1,5 @@
 
-LFGMythicPlus = LibStub("AceAddon-3.0"):NewAddon("LFGMythicPlus", "AceConsole-3.0", "AceEvent-3.0")
+LFGMythicPlus = LibStub("AceAddon-3.0"):NewAddon("MythicPlusKeyAnnouncer", "AceConsole-3.0", "AceEvent-3.0")
 local AceGUI = LibStub("AceGUI-3.0")
 
 local currentLFGResults = ''
@@ -34,11 +34,9 @@ function LFGMythicPlus:LFG_LIST_JOINED_GROUP(event, ...)
         local searchResultInfo = C_LFGList.GetSearchResultInfo(searchResultID)
         if searchResultInfo then
             --Get the Activity Information
-            fullName, shortName, categoryID, groupID, itemLevel, filters, minLevel, maxPlayers, displayType, orderIndex, useHonorLevel = C_LFGList.GetActivityInfo(searchResultInfo.activityID)
-
-
-
-            msg = ("|cffFFC125 Mythic Plus Key Group:|r |cffDA70D6  %s:%s:%s |r"):format(fullName, tostring(searchResultInfo.name), tostring(searchResultInfo.comment))
+            --fullName, shortName, categoryID, groupID, itemLevel, filters, minLevel, maxPlayers, displayType, orderIndex, useHonorLevel = C_LFGList.GetActivityInfoTable(searchResultInfo.activityID)
+			local activityInfo = C_LFGList.GetActivityInfoTable(searchResultInfo.activityID)
+            msg = ("|cffFFC125 Mythic Plus Key Group:|r |cffDA70D6  %s:%s:%s |r"):format(activityInfo.fullName, tostring(searchResultInfo.name), tostring(searchResultInfo.comment))
             currentLFGResults = msg
         end
     end

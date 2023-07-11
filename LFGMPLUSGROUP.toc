@@ -1,6 +1,8 @@
-## Interface: 90205
+## Interface: 100100
 ## Title: Mythic Plus Group
+## Notes: LFG Keystone tracker
 ## Author: Jason Burch
-## Version: 0.4
+## Version: 0.10.1
+## X-Curse-Project-ID: 449091
 embeds.xml
 LFGMPLUSGROUP.lua
