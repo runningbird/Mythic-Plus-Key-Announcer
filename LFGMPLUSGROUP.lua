@@ -12,9 +12,9 @@ end
 
 -- Handle Chat Commands if non arg then show the UI
 function LFGMythicPlus:ChatCommand()
-	--if not currentLFGResults == '' then
-	print(currentLFGResults)
-	--end
+	if not currentLFGResults == '' then
+		print(currentLFGResults)
+	end
 
 	--    if input == "colors" then
 	--        printColors()
