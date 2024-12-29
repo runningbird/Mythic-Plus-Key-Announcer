@@ -32,7 +32,7 @@ function LFGMythicPlus:LFG_LIST_JOINED_GROUP(event, ...)
 		if searchResultInfo then
 			--Get the Activity Information
 			--fullName, shortName, categoryID, groupID, itemLevel, filters, minLevel, maxPlayers, displayType, orderIndex, useHonorLevel = C_LFGList.GetActivityInfoTable(searchResultInfo.activityID)
-			local activityInfo = C_LFGList.GetActivityInfoTable(searchResultInfo.activityID)
+			local activityInfo = C_LFGList.GetActivityInfoTable(searchResultInfo.activityID, 0, false)
 			msg = ("|cffFFC125 Mythic Plus Key Group:|r |cffDA70D6  %s:%s:%s |r"):format(activityInfo.fullName,
 				tostring(searchResultInfo.name), tostring(searchResultInfo.comment))
 			currentLFGResults = msg
