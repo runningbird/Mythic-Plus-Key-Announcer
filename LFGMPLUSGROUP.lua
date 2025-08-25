@@ -93,14 +93,29 @@ local options = {
 }
 
 -- Initialize Addon
+-- Create a simple Blizzard options panel to show the icon (AceConfigDialog:AddToBlizOptions will still register the option table)
+-- Initialize Addon
 function LFGMythicPlus:OnInitialize()
 	self.db = LibStub("AceDB-3.0"):New("MythicPlusKeyAnnouncerDB", defaults, true)
 	AceConfig:RegisterOptionsTable("MythicPlusKeyAnnouncer", options)
 	AceConfigDialog:AddToBlizOptions("MythicPlusKeyAnnouncer", "Mythic Plus Key Announcer")
+	-- create Blizzard options panel when Blizzard UI is guaranteed to be ready
+	local loader = CreateFrame("Frame")
+	loader:RegisterEvent("PLAYER_LOGIN")
+	loader:SetScript("OnEvent", function(self, event)
+		-- using AceConfigDialog built-in to register options in Blizzard Interface Options
+		self:UnregisterEvent(event)
+	end)
 	self:RegisterChatCommand("mpk", "ChatCommand")
 	self:RegisterEvent("LFG_LIST_JOINED_GROUP")
 	self:RegisterEvent("GROUP_LEFT")
 end
+
+-- Path to addon media icon
+local ADDON_ICON = "Interface\\AddOns\\Mythic-Plus-Key-Announcer\\media\\637494804482635620.png"
+
+-- Create a simple Blizzard options panel to show the icon (AceConfigDialog:AddToBlizOptions will still register the option table)
+-- custom Blizzard options panel removed; using AceConfigDialog built-in registration only
 
 -- Helper to get hex color from db
 local function GetColorHex()
@@ -115,13 +130,22 @@ local function ShowGroupPopup(msg)
 		popupFrame:Hide()
 	end
 	popupFrame = CreateFrame("Frame", nil, UIParent, "BasicFrameTemplateWithInset")
-	popupFrame:SetSize(350, 100)
+	popupFrame:SetSize(420, 120)
 	popupFrame:SetPoint("CENTER")
+	-- icon
+	popupFrame.icon = popupFrame:CreateTexture(nil, "ARTWORK")
+	popupFrame.icon:SetSize(48, 48)
+	popupFrame.icon:SetPoint("TOPLEFT", 10, -10)
+	popupFrame.icon:SetTexture(ADDON_ICON)
+	-- title
 	popupFrame.title = popupFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
-	popupFrame.title:SetPoint("TOP", 0, -10)
+	popupFrame.title:SetPoint("TOPLEFT", popupFrame.icon, "TOPRIGHT", 8, -6)
 	popupFrame.title:SetText("Joined Mythic+ Group")
+	-- message
 	popupFrame.text = popupFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-	popupFrame.text:SetPoint("CENTER", 0, -10)
+	popupFrame.text:SetPoint("TOPLEFT", popupFrame.icon, "BOTTOMLEFT", 0, -6)
+	popupFrame.text:SetPoint("RIGHT", -10, 0)
+	popupFrame.text:SetJustifyH("LEFT")
 	popupFrame.text:SetText(msg)
 	popupFrame:SetScript("OnMouseDown", function(self, button) self:StartMoving() end)
 	popupFrame:SetScript("OnMouseUp", function(self, button) self:StopMovingOrSizing() end)
