@@ -176,6 +176,8 @@ end
 
 -- Helper to send a message to the configured channel with safe fallbacks
 local function SendToConfiguredChannel(msg)
+	-- Remove Blizzard escape codes (pipes) to avoid invalid escape code errors
+	msg = msg:gsub("|", "")
 	local chan = LFGMythicPlus.db.profile.sendChannel or "SAY"
 	local target = LFGMythicPlus.db.profile.sendTarget or ""
 
