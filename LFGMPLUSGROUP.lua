@@ -1,15 +1,17 @@
 LFGMythicPlus = LibStub("AceAddon-3.0"):NewAddon("MythicPlusKeyAnnouncer", "AceConsole-3.0", "AceEvent-3.0")
 local AceConfig = LibStub("AceConfig-3.0")
 local AceConfigDialog = LibStub("AceConfigDialog-3.0")
+local AceConfigRegistry = LibStub("AceConfigRegistry-3.0")
 
 local currentLFGResults = ''
+local currentPlainLFGResults = ''
 
 -- Default settings for AceDB
 local defaults = {
 	profile = {
 		messageColor = { r = 1, g = 0.76, b = 0.15 }, -- gold default
 		showPopup = true,                       -- show popup by default
-		sendChannel = "PARTY",                  -- default channel for announcements
+		sendChannel = "SAY",                    -- default channel for announcements (use Say)
 		sendTarget = "",                        -- target for whisper or channel number
 	}
 }
@@ -39,6 +41,8 @@ local options = {
 			end,
 			set = function(info, val)
 				LFGMythicPlus.db.profile.sendChannel = val
+				-- refresh the options UI so the change is visible
+				if AceConfigRegistry then AceConfigRegistry:NotifyChange("MythicPlusKeyAnnouncer") end
 			end,
 		},
 		sendTarget = {
@@ -157,23 +161,6 @@ local function ShowGroupPopup(msg)
 	C_Timer.After(5, function() if popupFrame and popupFrame:IsShown() then popupFrame:Hide() end end)
 end
 
--- Advanced /mpk handler placed after helpers so they are in scope
-function LFGMythicPlus:ChatCommand(input)
-	-- allow: /mpk testpopup  -> force the popup for testing
-	local cmd = (input or ""):lower():match("^(%S+)")
-	if cmd == "testpopup" then
-		local msg = currentLFGResults
-		if not msg or msg == '' then
-			-- fallback test message uses a static colored string
-			msg = "|cffFFD000 Mythic Plus Key Group:|r |cffDA70D6 TestDungeon:TestKey:15 |r"
-		end
-		ShowGroupPopup(msg)
-		return
-	end
-
-	AceConfigDialog:Open("MythicPlusKeyAnnouncer")
-end
-
 -- Helper to send a message to the configured channel with safe fallbacks
 local function SendToConfiguredChannel(msg)
 	-- Remove Blizzard escape codes (pipes) to avoid invalid escape code errors
@@ -222,6 +209,47 @@ local function SendToConfiguredChannel(msg)
 	C_ChatInfo.SendChatMessage(msg, chan)
 end
 
+-- Advanced /mpk handler placed after helpers so they are in scope
+function LFGMythicPlus:ChatCommand(input)
+	-- commands: /mpk, /mpk testpopup, /mpk last, /mpk resend
+	local text = (input or ""):trim()
+	if text == "" then
+		AceConfigDialog:Open("MythicPlusKeyAnnouncer")
+		return
+	end
+	local cmd, rest = text:match("^(%S+)%s*(.-)$")
+	cmd = cmd and cmd:lower()
+
+	if cmd == "testpopup" then
+		local msg = currentLFGResults
+		if not msg or msg == '' then
+			msg = "|cffFFD000 Mythic Plus Key Group:|r |cffDA70D6 TestDungeon:TestKey:15 |r"
+		end
+		ShowGroupPopup(msg)
+		return
+	elseif cmd == "last" or cmd == "show" then
+		if currentLFGResults and currentLFGResults ~= '' then
+			print(currentLFGResults)
+			ShowGroupPopup(currentLFGResults)
+		else
+			print("MythicPlusKeyAnnouncer: No recent group found.")
+		end
+		return
+	elseif cmd == "resend" then
+		if currentPlainLFGResults and currentPlainLFGResults ~= '' then
+			SendToConfiguredChannel(currentPlainLFGResults)
+			print("MythicPlusKeyAnnouncer: Re-sent last announcement.")
+		else
+			print("MythicPlusKeyAnnouncer: No plain announcement available to resend.")
+		end
+		return
+	else
+		-- unknown subcommand: open options
+		AceConfigDialog:Open("MythicPlusKeyAnnouncer")
+		return
+	end
+end
+
 -- Handle LFG Join Group Event
 function LFGMythicPlus:LFG_LIST_JOINED_GROUP(event, ...)
 	local searchResultID = ...
@@ -236,10 +264,11 @@ function LFGMythicPlus:LFG_LIST_JOINED_GROUP(event, ...)
 					activityInfoTable.fullName,
 					tostring(searchResultInfo.name), tostring(searchResultInfo.comment))
 				currentLFGResults = msg
-				-- Send a plain-text version to the configured chat channel (strip color codes)
+				-- Send and store a plain-text version to the configured chat channel (strip color codes)
 				local plainMsg = ("Mythic Plus Key Group: %s:%s:%s"):format(
 					activityInfoTable.fullName,
 					tostring(searchResultInfo.name), tostring(searchResultInfo.comment))
+				currentPlainLFGResults = plainMsg
 				SendToConfiguredChannel(plainMsg)
 			end
 		end
