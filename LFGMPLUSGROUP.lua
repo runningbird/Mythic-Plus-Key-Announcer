@@ -2,6 +2,8 @@ LFGMythicPlus = LibStub("AceAddon-3.0"):NewAddon("MythicPlusKeyAnnouncer", "AceC
 local AceConfig = LibStub("AceConfig-3.0")
 local AceConfigDialog = LibStub("AceConfigDialog-3.0")
 local AceConfigRegistry = LibStub("AceConfigRegistry-3.0")
+local AceLocale = LibStub("AceLocale-3.0")
+local L = AceLocale:GetLocale("MythicPlusKeyAnnouncer")
 
 local currentLFGResults = ''
 local currentPlainLFGResults = ''
@@ -18,23 +20,23 @@ local defaults = {
 
 -- Options table for AceConfig
 local options = {
-	name = "Mythic Plus Key Announcer",
+	name = L["Mythic Plus Key Announcer"],
 	handler = LFGMythicPlus,
 	type = 'group',
 	args = {
 		sendChannel = {
 			type = "select",
-			name = "Announcement Channel",
-			desc = "Which chat channel to send the group filled message to.",
+			name = L["Announcement Channel"],
+			desc = L["Configure how group announcements are sent and displayed."],
 			values = {
-				SAY = "Say",
-				PARTY = "Party",
-				RAID = "Raid",
-				GUILD = "Guild",
-				INSTANCE_CHAT = "Instance",
-				YELL = "Yell",
-				WHISPER = "Whisper (requires target)",
-				CHANNEL = "Channel (requires channel number)",
+				SAY = L["Say"],
+				PARTY = L["Party"],
+				RAID = L["Raid"],
+				GUILD = L["Guild"],
+				INSTANCE_CHAT = L["Instance"],
+				YELL = L["Yell"],
+				WHISPER = L["Whisper (requires target)"],
+				CHANNEL = L["Channel (requires channel number)"],
 			},
 			get = function(info)
 				return LFGMythicPlus.db.profile.sendChannel
@@ -47,13 +49,14 @@ local options = {
 		},
 		sendTarget = {
 			type = "input",
-			name = "Target",
-			desc = "Player name for WHISPER or channel number for CHANNEL (e.g. 'SomePlayer' or '1').",
+			name = L["Target"],
+			desc = L["Target"],
 			get = function(info)
 				return LFGMythicPlus.db.profile.sendTarget
 			end,
 			set = function(info, val)
 				LFGMythicPlus.db.profile.sendTarget = val
+				if AceConfigRegistry then AceConfigRegistry:NotifyChange("MythicPlusKeyAnnouncer") end
 			end,
 			hidden = function()
 				local db = LFGMythicPlus.db and LFGMythicPlus.db.profile
@@ -65,25 +68,26 @@ local options = {
 		-- Test button to send a test announcement using current settings
 		testAnnouncement = {
 			type = "execute",
-			name = "Test Announcement",
-			desc = "Send a test announcement to the configured channel and show the popup.",
+			name = L["Test Announcement"],
+			desc = L["Test the configured announcement and popup."],
 			func = "TestAnnouncement",
 		},
 		showPopup = {
 			type = "toggle",
-			name = "Show popup on join",
-			desc = "Show a popup window when you join a Mythic+ group.",
+			name = L["Show popup on join"],
+			desc = L["Show a popup window when you join a Mythic+ group."],
 			get = function(info)
 				return LFGMythicPlus.db.profile.showPopup
 			end,
 			set = function(info, val)
 				LFGMythicPlus.db.profile.showPopup = val
+				if AceConfigRegistry then AceConfigRegistry:NotifyChange("MythicPlusKeyAnnouncer") end
 			end,
 		},
 		messageColor = {
 			type = "color",
-			name = "Message Color",
-			desc = "Set the color for the group filled chat message.",
+			name = L["Message Color"],
+			desc = L["Set the color for the group filled chat message."],
 			get = function(info)
 				local c = LFGMythicPlus.db.profile.messageColor
 				return c.r, c.g, c.b
@@ -91,6 +95,7 @@ local options = {
 			set = function(info, r, g, b)
 				local c = LFGMythicPlus.db.profile.messageColor
 				c.r, c.g, c.b = r, g, b
+				if AceConfigRegistry then AceConfigRegistry:NotifyChange("MythicPlusKeyAnnouncer") end
 			end,
 		},
 	},
@@ -102,7 +107,7 @@ local options = {
 function LFGMythicPlus:OnInitialize()
 	self.db = LibStub("AceDB-3.0"):New("MythicPlusKeyAnnouncerDB", defaults, true)
 	AceConfig:RegisterOptionsTable("MythicPlusKeyAnnouncer", options)
-	AceConfigDialog:AddToBlizOptions("MythicPlusKeyAnnouncer", "Mythic Plus Key Announcer")
+	AceConfigDialog:AddToBlizOptions("MythicPlusKeyAnnouncer", L["Mythic Plus Key Announcer"])
 	-- create Blizzard options panel when Blizzard UI is guaranteed to be ready
 	local loader = CreateFrame("Frame")
 	loader:RegisterEvent("PLAYER_LOGIN")
@@ -144,7 +149,7 @@ local function ShowGroupPopup(msg)
 	-- title
 	popupFrame.title = popupFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
 	popupFrame.title:SetPoint("TOPLEFT", popupFrame.icon, "TOPRIGHT", 8, -6)
-	popupFrame.title:SetText("Joined Mythic+ Group")
+	popupFrame.title:SetText(L["Joined Mythic+ Group"])
 	-- message
 	popupFrame.text = popupFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 	popupFrame.text:SetPoint("TOPLEFT", popupFrame.icon, "BOTTOMLEFT", 0, -6)
@@ -174,7 +179,7 @@ local function SendToConfiguredChannel(msg)
 			C_ChatInfo.SendChatMessage(msg, "WHISPER", nil, target)
 			return
 		else
-			print("MythicPlusKeyAnnouncer: no whisper target set, sending to SAY instead.")
+			print(("MythicPlusKeyAnnouncer: %s"):format(L["No whisper target set; sending to SAY."]))
 			C_ChatInfo.SendChatMessage(msg, "SAY")
 			return
 		end
@@ -187,7 +192,7 @@ local function SendToConfiguredChannel(msg)
 			C_ChatInfo.SendChatMessage(msg, "CHANNEL", nil, tostring(num))
 			return
 		else
-			print("MythicPlusKeyAnnouncer: invalid channel number, sending to SAY instead.")
+			print(("MythicPlusKeyAnnouncer: %s"):format(L["Invalid channel number; sending to SAY."]))
 			C_ChatInfo.SendChatMessage(msg, "SAY")
 			return
 		end
@@ -223,7 +228,7 @@ function LFGMythicPlus:ChatCommand(input)
 	if cmd == "testpopup" then
 		local msg = currentLFGResults
 		if not msg or msg == '' then
-			msg = "|cffFFD000 Mythic Plus Key Group:|r |cffDA70D6 TestDungeon:TestKey:15 |r"
+			msg = ("|cffFFD000 %s|r |cffDA70D6 TestDungeon:TestKey:15 |r"):format(L["Mythic Plus Key Group:"])
 		end
 		ShowGroupPopup(msg)
 		return
@@ -232,15 +237,15 @@ function LFGMythicPlus:ChatCommand(input)
 			print(currentLFGResults)
 			ShowGroupPopup(currentLFGResults)
 		else
-			print("MythicPlusKeyAnnouncer: No recent group found.")
+			print(("MythicPlusKeyAnnouncer: %s"):format(L["No recent group found."]))
 		end
 		return
 	elseif cmd == "resend" then
 		if currentPlainLFGResults and currentPlainLFGResults ~= '' then
 			SendToConfiguredChannel(currentPlainLFGResults)
-			print("MythicPlusKeyAnnouncer: Re-sent last announcement.")
+			print(("MythicPlusKeyAnnouncer: %s"):format(L["Re-sent last announcement."]))
 		else
-			print("MythicPlusKeyAnnouncer: No plain announcement available to resend.")
+			print(("MythicPlusKeyAnnouncer: %s"):format(L["No plain announcement available to resend."]))
 		end
 		return
 	else
@@ -260,12 +265,13 @@ function LFGMythicPlus:LFG_LIST_JOINED_GROUP(event, ...)
 		if searchResultInfo then
 			for _, activitiID in pairs(searchResultInfo.activityIDs) do
 				local activityInfoTable = C_LFGList.GetActivityInfoTable(activitiID)
-				msg = (GetColorHex() .. " Mythic Plus Key Group:|r |cffDA70D6  %s:%s:%s |r"):format(
+				msg = (GetColorHex() .. " %s|r |cffDA70D6  %s:%s:%s |r"):format(
+					L["Mythic Plus Key Group:"],
 					activityInfoTable.fullName,
 					tostring(searchResultInfo.name), tostring(searchResultInfo.comment))
 				currentLFGResults = msg
 				-- Send and store a plain-text version to the configured chat channel (strip color codes)
-				local plainMsg = ("Mythic Plus Key Group: %s:%s:%s"):format(
+				local plainMsg = ("%s %s:%s:%s"):format(L["Mythic Plus Key Group:"],
 					activityInfoTable.fullName,
 					tostring(searchResultInfo.name), tostring(searchResultInfo.comment))
 				currentPlainLFGResults = plainMsg
@@ -288,9 +294,10 @@ end
 -- Test announcement method invoked by the options panel button
 function LFGMythicPlus:TestAnnouncement()
 	local testDungeon, testKey, testLevel = "TestDungeon", "TestKey", "15"
-	local colored = (GetColorHex() .. " Mythic Plus Key Group:|r |cffDA70D6  %s:%s:%s |r"):format(testDungeon, testKey,
+	local colored = (GetColorHex() .. " %s|r |cffDA70D6  %s:%s:%s |r"):format(L["Mythic Plus Key Group:"], testDungeon,
+		testKey,
 		testLevel)
-	local plain = ("Mythic Plus Key Group: %s:%s:%s"):format(testDungeon, testKey, testLevel)
+	local plain = ("%s %s:%s:%s"):format(L["Mythic Plus Key Group:"], testDungeon, testKey, testLevel)
 	SendToConfiguredChannel(plain)
 	ShowGroupPopup(colored)
 end
