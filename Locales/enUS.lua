@@ -20,7 +20,6 @@ L["Test the configured announcement and popup."] = "Test the configured announce
 L["Show a popup window when you join a Mythic+ group."] = "Show a popup window when you join a Mythic+ group."
 L["Set the color for the group filled chat message."] = "Set the color for the group filled chat message."
 L["Test Announcement"] = "Test Announcement"
-L["Configure how group announcements are sent and displayed."] = "Configure how group announcements are sent and displayed."
 L["Joined Mythic+ Group"] = "Joined Mythic+ Group"
 L["No whisper target set; sending to SAY."] = "No whisper target set; sending to SAY."
 L["Invalid channel number; sending to SAY."] = "Invalid channel number; sending to SAY."
