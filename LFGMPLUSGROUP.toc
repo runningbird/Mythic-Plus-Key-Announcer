@@ -2,6 +2,7 @@
 ## X-Min-Interface: 110200
 ## Title: Mythic Plus Group
 ## Notes: LFG Keystone tracker
+## Notes-ruRU: Аддон, который объявляет, когда Вы присоединяетесь к группе M+ (или связанной с ней), и показывает всплывающее окно с ключом группы и подробностями
 ## Author: Jason Burch
 ## Version: @project-version@
 ## X-Curse-Project-ID: 449091
@@ -11,4 +12,5 @@ Locales\enUS.lua
 Locales\esES.lua
 Locales\frFR.lua
 Locales\zhCN.lua
+Locales\ruRU.lua
 LFGMPLUSGROUP.lua
