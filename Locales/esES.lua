@@ -23,6 +23,10 @@ L["Test the configured announcement and popup."] =
 L["Show a popup window when you join a Mythic+ group."] =
 "Muestra una ventana emergente cuando te unes a un grupo Mítica+."
 L["Set the color for the group filled chat message."] = "Establece el color del mensaje de chat de grupo completado."
+L["Send chat announcements"] = "Enviar anuncios al chat"
+L["Toggle sending announcements to chat; when disabled only the popup will appear (if enabled)."] =
+"Alterna enviar anuncios al chat; cuando está desactivado solo aparecerá la ventana emergente (si está activada)."
+L["Announcements are disabled; popup only."] = "Los anuncios están desactivados; solo la ventana emergente."
 L["Joined Mythic+ Group"] = "Unido a grupo Mítica+"
 L["No whisper target set; sending to SAY."] = "No se estableció un objetivo para susurrar; enviando a DECIR."
 L["Invalid channel number; sending to SAY."] = "Número de canal inválido; enviando a DECIR."

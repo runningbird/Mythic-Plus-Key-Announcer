@@ -20,6 +20,10 @@ L["Yell"] = "Yell"
 L["Test the configured announcement and popup."] = "Test the configured announcement and popup."
 L["Show a popup window when you join a Mythic+ group."] = "Show a popup window when you join a Mythic+ group."
 L["Set the color for the group filled chat message."] = "Set the color for the group filled chat message."
+L["Send chat announcements"] = "Send chat announcements"
+L["Toggle sending announcements to chat; when disabled only the popup will appear (if enabled)."] =
+"Toggle sending announcements to chat; when disabled only the popup will appear (if enabled)."
+L["Announcements are disabled; popup only."] = "Announcements are disabled; popup only."
 L["Test Announcement"] = "Test Announcement"
 L["Configure how group announcements are sent and displayed."] =
 "Configure how group announcements are sent and displayed."

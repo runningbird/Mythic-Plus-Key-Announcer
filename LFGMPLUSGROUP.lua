@@ -13,6 +13,7 @@ local defaults = {
 	profile = {
 		messageColor = { r = 1, g = 0.76, b = 0.15 }, -- gold default
 		showPopup = true,                       -- show popup by default
+		announceToChat = true,                  -- send chat announcements by default
 		sendChannel = "SAY",                    -- default channel for announcements (use Say)
 		sendTarget = "",                        -- target for whisper or channel number
 	}
@@ -98,6 +99,18 @@ local options = {
 				if AceConfigRegistry then AceConfigRegistry:NotifyChange("MythicPlusKeyAnnouncer") end
 			end,
 		},
+		announceToChat = {
+			type = "toggle",
+			name = L["Send chat announcements"],
+			desc = L["Toggle sending announcements to chat; when disabled only the popup will appear (if enabled)."],
+			get = function(info)
+				return LFGMythicPlus.db.profile.announceToChat
+			end,
+			set = function(info, val)
+				LFGMythicPlus.db.profile.announceToChat = val
+				if AceConfigRegistry then AceConfigRegistry:NotifyChange("MythicPlusKeyAnnouncer") end
+			end,
+		},
 	},
 }
 
@@ -168,6 +181,10 @@ end
 
 -- Helper to send a message to the configured channel with safe fallbacks
 local function SendToConfiguredChannel(msg)
+	-- Respect the announceToChat setting
+	if not LFGMythicPlus.db.profile.announceToChat then
+		return
+	end
 	-- Remove Blizzard escape codes (pipes) to avoid invalid escape code errors
 	msg = msg:gsub("|", "")
 	local chan = LFGMythicPlus.db.profile.sendChannel or "SAY"
@@ -242,8 +259,12 @@ function LFGMythicPlus:ChatCommand(input)
 		return
 	elseif cmd == "resend" then
 		if currentPlainLFGResults and currentPlainLFGResults ~= '' then
-			SendToConfiguredChannel(currentPlainLFGResults)
-			print(("MythicPlusKeyAnnouncer: %s"):format(L["Re-sent last announcement."]))
+			if LFGMythicPlus.db.profile.announceToChat then
+				SendToConfiguredChannel(currentPlainLFGResults)
+				print(("MythicPlusKeyAnnouncer: %s"):format(L["Re-sent last announcement."]))
+			else
+				print(("MythicPlusKeyAnnouncer: %s"):format(L["Announcements are disabled; popup only."]))
+			end
 		else
 			print(("MythicPlusKeyAnnouncer: %s"):format(L["No plain announcement available to resend."]))
 		end
