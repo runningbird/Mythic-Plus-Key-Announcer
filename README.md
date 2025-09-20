@@ -7,7 +7,7 @@ Mythic-Plus-Key-Announcer is a small World of Warcraft addon that announces when
 - Announce the Mythic+ key info to a configurable chat channel (Say, Party, Raid, Guild, Instance, Yell, Whisper, or a custom Channel).
 - Optional popup when you join a group, with configurable message color.
 - Test announcement button and slash commands to show/resend the last announcement.
-- Localization-ready (enUS, esES, frFR, zhCN included).
+- Localization-ready (enUS, esES, frFR, ptBR, ruRU, zhCN included).
 
 ## Installation
 
