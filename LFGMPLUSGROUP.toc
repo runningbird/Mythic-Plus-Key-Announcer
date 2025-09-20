@@ -12,6 +12,7 @@ embeds.xml
 Locales\enUS.lua
 Locales\esES.lua
 Locales\frFR.lua
+Locales\ptBR.lua
 Locales\zhCN.lua
 Locales\ruRU.lua
 LFGMPLUSGROUP.lua
