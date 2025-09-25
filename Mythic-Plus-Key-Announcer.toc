@@ -1,6 +1,6 @@
 ## Interface: 110200
 ## X-Min-Interface: 110200
-## Title: Mythic Plus Group
+## Title: Mythic-Plus-Key-Announcer
 ## Notes: LFG Keystone tracker
 ## Author: Jason Burch
 ## Version: @project-version@
@@ -12,4 +12,5 @@ Locales\enUS.lua
 Locales\esES.lua
 Locales\frFR.lua
 Locales\zhCN.lua
-LFGMPLUSGROUP.lua
+Thumbnail
+Mythic-Plus-Key-Announcer.lua
