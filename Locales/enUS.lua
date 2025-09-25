@@ -9,8 +9,7 @@ L["Announcement Channel"] = "Announcement Channel"
 L["Whisper (requires target)"] = "Whisper (requires target)"
 L["Channel (requires channel number)"] = "Channel (requires channel number)"
 L["Target"] = "Target"
-L["Configure how group announcements are sent and displayed."] =
-"Configure how group announcements are sent and displayed."
+L["Configure how group announcements are sent and displayed."] = "Configure how group announcements are sent and displayed."
 L["Say"] = "Say"
 L["Party"] = "Party"
 L["Raid"] = "Raid"
@@ -25,11 +24,9 @@ L["Toggle sending announcements to chat; when disabled only the popup will appea
 "Toggle sending announcements to chat; when disabled only the popup will appear (if enabled)."
 L["Announcements are disabled; popup only."] = "Announcements are disabled; popup only."
 L["Test Announcement"] = "Test Announcement"
-L["Configure how group announcements are sent and displayed."] =
-"Configure how group announcements are sent and displayed."
 L["Joined Mythic+ Group"] = "Joined Mythic+ Group"
-L["No whisper target set; sending to SAY."] = true
-L["Invalid channel number; sending to SAY."] = true
+L["No whisper target set; sending to SAY."] = "No whisper target set; sending to SAY."
+L["Invalid channel number; sending to SAY."] = "Invalid channel number; sending to SAY."
 L["Mythic Plus Key Group:"] = "Mythic Plus Key Group:"
 L["No recent group found."] = "No recent group found."
 L["Re-sent last announcement."] = "Re-sent last announcement."
