@@ -1,5 +1,5 @@
 local AceLocale = LibStub("AceLocale-3.0")
-local L = AceLocale:NewLocale("MythicPlusKeyAnnouncer", "frFR")
+local L = AceLocale:NewLocale("MythicPlusKeyAnnouncer", "ruRU")
 if not L then return end
 
 L["Mythic Plus Key Announcer"] = "Оповещатель о ключах Mythic Plus"
