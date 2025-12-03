@@ -1,5 +1,5 @@
-## Interface: 110205
-## X-Min-Interface: 110205
+## Interface: 110207
+## X-Min-Interface: 110207
 ## Title: Mythic-Plus-Key-Announcer
 ## Notes: LFG Keystone tracker
 ## Notes-ruRU: Аддон, который оповещает, когда Вы присоединяетесь к группе M+ (или связанной с ней), и показывает всплывающее окно с ключом группы и подробностями
