@@ -190,45 +190,49 @@ local function SendToConfiguredChannel(msg)
 	local chan = LFGMythicPlus.db.profile.sendChannel or "SAY"
 	local target = LFGMythicPlus.db.profile.sendTarget or ""
 
-	-- WHISPER
-	if chan == "WHISPER" then
-		if strtrim(target) ~= "" then
-			C_ChatInfo.SendChatMessage(msg, "WHISPER", nil, target)
+	-- Delay the chat message to avoid protected function errors in WoW 12.01+
+	-- Chat functions can't be called directly from certain event handlers
+	C_Timer.After(0.1, function()
+		-- WHISPER
+		if chan == "WHISPER" then
+			if strtrim(target) ~= "" then
+				C_ChatInfo.SendChatMessage(msg, "WHISPER", nil, target)
+				return
+			else
+				print(("MythicPlusKeyAnnouncer: %s"):format(L["No whisper target set; sending to SAY."]))
+				C_ChatInfo.SendChatMessage(msg, "SAY")
+				return
+			end
+		end
+
+		-- CHANNEL (expects numeric channel id)
+		if chan == "CHANNEL" then
+			local num = tonumber(target)
+			if num and num > 0 then
+				C_ChatInfo.SendChatMessage(msg, "CHANNEL", nil, tostring(num))
+				return
+			else
+				print(("MythicPlusKeyAnnouncer: %s"):format(L["Invalid channel number; sending to SAY."]))
+				C_ChatInfo.SendChatMessage(msg, "SAY")
+				return
+			end
+		end
+
+		-- Party/Raid/Instance/Guild/Yell/Say fallbacks
+		if chan == "PARTY" and not IsInGroup() then
+			C_ChatInfo.SendChatMessage(msg, "SAY")
 			return
-		else
-			print(("MythicPlusKeyAnnouncer: %s"):format(L["No whisper target set; sending to SAY."]))
+		elseif chan == "RAID" and not IsInRaid() then
+			C_ChatInfo.SendChatMessage(msg, "SAY")
+			return
+		elseif chan == "INSTANCE_CHAT" and not IsInGroup() then
 			C_ChatInfo.SendChatMessage(msg, "SAY")
 			return
 		end
-	end
 
-	-- CHANNEL (expects numeric channel id)
-	if chan == "CHANNEL" then
-		local num = tonumber(target)
-		if num and num > 0 then
-			C_ChatInfo.SendChatMessage(msg, "CHANNEL", nil, tostring(num))
-			return
-		else
-			print(("MythicPlusKeyAnnouncer: %s"):format(L["Invalid channel number; sending to SAY."]))
-			C_ChatInfo.SendChatMessage(msg, "SAY")
-			return
-		end
-	end
-
-	-- Party/Raid/Instance/Guild/Yell/Say fallbacks
-	if chan == "PARTY" and not IsInGroup() then
-		C_ChatInfo.SendChatMessage(msg, "SAY")
-		return
-	elseif chan == "RAID" and not IsInRaid() then
-		C_ChatInfo.SendChatMessage(msg, "SAY")
-		return
-	elseif chan == "INSTANCE_CHAT" and not IsInGroup() then
-		C_ChatInfo.SendChatMessage(msg, "SAY")
-		return
-	end
-
-	-- Default send
-	C_ChatInfo.SendChatMessage(msg, chan)
+		-- Default send
+		C_ChatInfo.SendChatMessage(msg, chan)
+	end)
 end
 
 -- Advanced /mpk handler placed after helpers so they are in scope
