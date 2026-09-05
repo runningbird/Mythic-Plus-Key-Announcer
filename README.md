@@ -34,7 +34,7 @@ Copy the addon folder into your World of Warcraft `_retail_/Interface/AddOns/` d
 ## Notes
 
 - The addon strips `|` characters from outgoing messages to avoid invalid chat escape code errors.
-- Uses Ace3 libraries bundled in `Libs/`.
+- Uses Ace3 libraries bundled into the release package at build time (declared as externals in `.pkgmeta`).
 
 ## Contributing
 
